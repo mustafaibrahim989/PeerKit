@@ -15,6 +15,7 @@ public typealias PeerBlock = ((myPeerID: MCPeerID, peerID: MCPeerID) -> Void)
 public typealias EventBlock = ((peerID: MCPeerID, event: String, object: AnyObject?) -> Void)
 public typealias ObjectBlock = ((peerID: MCPeerID, object: AnyObject?) -> Void)
 public typealias ResourceBlock = ((myPeerID: MCPeerID, resourceName: String, peer: MCPeerID, localURL: NSURL) -> Void)
+public typealias ReceivingResourceBlock = ((myPeerID: MCPeerID, resourceName: String, peer: MCPeerID, withProgress: NSProgress!) -> Void)
 
 // MARK: Event Blocks
 
@@ -24,6 +25,7 @@ public var onDisconnect: PeerBlock?
 public var onEvent: EventBlock?
 public var onEventObject: ObjectBlock?
 public var onFinishReceivingResource: ResourceBlock?
+public var onStartReceivingResource: ReceivingResourceBlock?
 public var eventBlocks = [String: ObjectBlock]()
 
 // MARK: PeerKit Globals
@@ -79,6 +81,14 @@ func didFinishReceivingResource(myPeerID: MCPeerID, resourceName: String, fromPe
     if let onFinishReceivingResource = onFinishReceivingResource {
         dispatch_async(dispatch_get_main_queue()) {
             onFinishReceivingResource(myPeerID: myPeerID, resourceName: resourceName, peer: peer, localURL: localURL)
+        }
+    }
+}
+
+func didStartReceivingResource(myPeerID: MCPeerID, resourceName: String, fromPeer peer: MCPeerID, withProgress progress: NSProgress!) {
+    if let onStartReceivingResource = onStartReceivingResource  {
+        dispatch_async(dispatch_get_main_queue()) {
+            onStartReceivingResource(myPeerID: myPeerID, resourceName: resourceName, peer: peer, withProgress: progress)
         }
     }
 }

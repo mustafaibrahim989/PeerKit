@@ -15,6 +15,7 @@ public protocol SessionDelegate {
     func disconnected(myPeerID: MCPeerID, fromPeer peer: MCPeerID)
     func receivedData(myPeerID: MCPeerID, data: NSData, fromPeer peer: MCPeerID)
     func finishReceivingResource(myPeerID: MCPeerID, resourceName: String, fromPeer peer: MCPeerID, atURL localURL: NSURL)
+    func startReceivingResource(myPeerID: MCPeerID, resourceName: String, fromPeer peer: MCPeerID, withProgress progress: NSProgress!)
 }
 
 public class Session: NSObject, MCSessionDelegate {
@@ -59,6 +60,7 @@ public class Session: NSObject, MCSessionDelegate {
 
     public func session(session: MCSession!, didStartReceivingResourceWithName resourceName: String!, fromPeer peerID: MCPeerID!, withProgress progress: NSProgress!) {
         // unused
+        delegate?.startReceivingResource(myPeerID, resourceName: resourceName, fromPeer: peerID, withProgress: progress)
     }
 
     public func session(session: MCSession!, didFinishReceivingResourceWithName resourceName: String!, fromPeer peerID: MCPeerID!, atURL localURL: NSURL!, withError error: NSError!) {
